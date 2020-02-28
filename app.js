@@ -162,29 +162,20 @@ var UIController = (function() {
 
 
     var formatNumber = function(num, type) {
-        var abs, numSplit, int, dec, newNum, sign;
+        var sign;
 
-        abs = Math.abs(num);
-        abs = abs.toFixed(2);
-
-        numSplit = abs.split('.');
-        int = numSplit[0];
-        dec = numSplit[1];
-        newNum = int.substr(0, int.length % 3);
-
-        if (int.length > 3) {
-            for (var i = int.length % 3; i < int.length - 1; i += 3) {
-                newNum += ',' + int.substr(i, 3);
-            }
-        }
-        if (int > 0 || dec > 0) {
+        if (num) {
             type === 'exp' ? sign = '-' : sign = '+';
         } else {
-            sign = '';
+            sign = ' ';
         }
-        
-
-        return sign + ' ' + newNum + '.' + dec;
+        const formatOptions = { style: 'currency', currency: 'USD' };
+        const numberFormat = new Intl.NumberFormat('en-US', formatOptions);
+        if (num < 0) {
+            return (sign + numberFormat.format(num).slice(2, num.length));
+        } else {
+            return (sign + numberFormat.format(num).slice(1, num.length));
+        }  
     };
 
     var nodeListForEach = function (list, callback) {
